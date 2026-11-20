@@ -18,12 +18,16 @@ public:
     void createGLFWWindow();
     void initGlad();
     void setupBuffers(const std::vector<Vec3> vertices, const std::vector<unsigned int> indices);
+    void setupLineBuffers(const std::vector<Vec3> vertices);
 
     GLFWwindow* getWindow() const { return mWindow; };
 
     unsigned int getVAO() const { return meshVAO; };
     unsigned int getVBO() const { return meshVBO; };
     unsigned int getEBO() const { return meshEBO; };
+
+    unsigned int getLineVAO() const { return lineVAO; };
+    unsigned int getLineVBO() const { return lineVBO; };
 
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void key_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -91,6 +95,32 @@ inline void GLFWBuilder::setupBuffers(const std::vector<Vec3> vertices, const st
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+    glBindVertexArray(0);
+
+}
+
+inline void GLFWBuilder::setupLineBuffers(const std::vector<Vec3> vertices)
+{
+    glGenVertexArrays(1, &lineVAO);
+    glGenBuffers(1, &lineVBO);
+
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glBindVertexArray(lineVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vec3), vertices.data(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);

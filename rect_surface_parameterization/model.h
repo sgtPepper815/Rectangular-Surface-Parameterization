@@ -6,14 +6,14 @@
 
 // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-std::vector<Vec3> vertices = {
+const std::vector<Vec3> vertices = {
     Vec3(0.5f,  0.5f, 0.0f), // top right
     Vec3(0.5f, -0.5f, 0.0f),  // bottom right
     Vec3(-0.5f, -0.5f, 0.0f),  // bottom left
     Vec3(-0.5f,  0.5f, 0.0f)   // top left 
 };
 
-std::vector<unsigned int> indices = {  // note that we start from 0 and go anti clockwise
+const std::vector<unsigned int> indices = {  // note that we start from 0 and go anti clockwise
     0, 3, 1,  // first Triangle
     1, 3, 2   // second Triangle
 };
