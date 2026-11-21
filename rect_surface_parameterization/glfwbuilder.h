@@ -7,12 +7,41 @@
 
 #include "settings.h"
 #include "vec.h"
+#include "camera.h"
+
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+    Camera* camera = static_cast<Camera*>(
+        glfwGetWindowUserPointer(window)
+        );
+
+    if (!camera)
+        return;
+
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+
+    camera->onMouseButton(button, action, x, y);
+}
+
+void cursorPositionCallback(GLFWwindow* window, double x, double y)
+{
+    Camera* camera = static_cast<Camera*>(
+        glfwGetWindowUserPointer(window)
+        );
+
+    if (!camera)
+        return;
+
+    camera->onMouseMove(x, y);
+}
+
 
 
 class GLFWBuilder
 {
 public:
-    GLFWBuilder();
+    GLFWBuilder(Camera& camera);
     ~GLFWBuilder() = default;
 
 	GLFWBuilder& operator=(const GLFWBuilder&) = delete;
@@ -39,9 +68,12 @@ private:
     GLFWwindow* mWindow;
     unsigned int meshVBO, meshVAO, meshEBO;
     unsigned int lineVBO, lineVAO;
+
+    Camera* mCamera;
 };
 
-inline GLFWBuilder::GLFWBuilder()
+inline GLFWBuilder::GLFWBuilder(Camera& camera)
+    : mCamera(&camera)
 {
     // glfw: initialize and configure
     // ------------------------------
@@ -69,6 +101,18 @@ inline void GLFWBuilder::createGLFWWindow()
 
     glfwMakeContextCurrent(mWindow);
 
+    if (mCamera == nullptr)
+    {
+		std::cout << "Camera pointer is null" << __FUNCTION__ << std::endl;
+		glfwTerminate();
+        return;
+    }
+
+    glfwSetWindowUserPointer(mWindow, mCamera);
+
+	glfwSetMouseButtonCallback(mWindow, mouseButtonCallback);
+	glfwSetCursorPosCallback(mWindow, cursorPositionCallback);
+
     glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
     glfwSetKeyCallback(mWindow, key_input_callback);
 
@@ -82,6 +126,8 @@ inline void GLFWBuilder::initGlad()
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 inline void GLFWBuilder::setupBuffers(const std::vector<Vec3> vertices, const std::vector<unsigned int> indices)

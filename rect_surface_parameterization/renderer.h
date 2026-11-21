@@ -28,7 +28,7 @@ public:
         GLuint lineVAO, 
         GLuint lineVBO, 
         int lineVerticesSize,
-        glm::mat4 cameraViewMatrix);
+        Camera* camera);
 
 
 private:
@@ -37,7 +37,16 @@ private:
 };
 
 
-inline void Renderer::run(GLFWwindow* window, GLuint shaderProgram, GLuint lineShaderProgram, GLuint VAO, GLuint VBO, GLuint EBO, GLuint lineVAO, GLuint lineVBO, int lineVerticesSize, glm::mat4 cameraViewMatrix)
+inline void Renderer::run(GLFWwindow* window, 
+    GLuint shaderProgram, 
+    GLuint lineShaderProgram, 
+    GLuint VAO, 
+    GLuint VBO, 
+    GLuint EBO, 
+    GLuint lineVAO, 
+    GLuint lineVBO, 
+    int lineVerticesSize, 
+    Camera* camera)
 {
     // render loop
     // -----------
@@ -46,10 +55,10 @@ inline void Renderer::run(GLFWwindow* window, GLuint shaderProgram, GLuint lineS
         // model matrix
         glm::mat4 model = glm::mat4(1.0f);
 
-        // View-Matrix unserer Kamera
-        glm::mat4 view = cameraViewMatrix;
+        // view matrix
+        glm::mat4 view = camera->getViewMatrix(camera->getCameraPosition());
 
-        // Projection-Matrix
+        // projection matrix
         glm::mat4 projection = glm::perspective(
             glm::radians(45.0f),
             800.0f / 600.0f,
@@ -60,7 +69,7 @@ inline void Renderer::run(GLFWwindow* window, GLuint shaderProgram, GLuint lineS
         // render
         // ------
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // draw
         glUseProgram(shaderProgram);
