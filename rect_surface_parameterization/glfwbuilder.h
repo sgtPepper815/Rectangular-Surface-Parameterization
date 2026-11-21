@@ -36,6 +36,18 @@ void cursorPositionCallback(GLFWwindow* window, double x, double y)
     camera->onMouseMove(x, y);
 }
 
+void scrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+{
+    Camera* camera = static_cast<Camera*>(
+        glfwGetWindowUserPointer(window)
+        );
+
+    if (!camera)
+        return;
+
+    camera->onMouseScroll(yOffset);
+}
+
 
 
 class GLFWBuilder
@@ -111,7 +123,8 @@ inline void GLFWBuilder::createGLFWWindow()
     glfwSetWindowUserPointer(mWindow, mCamera);
 
 	glfwSetMouseButtonCallback(mWindow, mouseButtonCallback);
-	glfwSetCursorPosCallback(mWindow, cursorPositionCallback);
+	glfwSetCursorPosCallback(mWindow, cursorPositionCallback); 
+    glfwSetScrollCallback(mWindow, scrollCallback);
 
     glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
     glfwSetKeyCallback(mWindow, key_input_callback);

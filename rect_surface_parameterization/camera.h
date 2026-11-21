@@ -15,7 +15,8 @@ public:
 	glm::mat4 getViewMatrix(glm::vec3 cameraPosition); 
 	
 	void onMouseButton(int button, int action, double x, double y);
-	void onMouseMove(double x, double y);
+	void onMouseMove(double x, double y); 
+	void onMouseScroll(double yOffset);
 private:
 	glm::vec3 mTarget;
 	float mYaw;

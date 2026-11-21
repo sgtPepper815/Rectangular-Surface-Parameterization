@@ -52,3 +52,14 @@ void Camera::onMouseMove(double x, double y)
 		mPitch = glm::clamp(mPitch, -1.55f, 1.55f); // prevent gimbal lock - move only between aprox. -88.8 and 88.8 degrees
 	}
 }
+
+void Camera::onMouseScroll(double yOffset)
+{
+	float zoomSpeed = 0.1f;
+
+	mDistance *= std::exp(
+		-static_cast<float>(yOffset) * zoomSpeed
+	);
+
+	mDistance = glm::clamp(mDistance, 0.2f, 50.0f);
+}
