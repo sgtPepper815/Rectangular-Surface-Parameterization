@@ -27,10 +27,11 @@ int main()
 	glfwBuilder.setupLineBuffers(lineVertices);
 
 	Shader shader("shader/shader.vert", "shader/shader.frag");
-	Shader lineShader("shader/lineShader.vert", "shader/lineShader.frag");
+	Shader blackLineShader("shader/blackLineShader.vert", "shader/blackLineShader.frag");
+	Shader normalsShader("shader/normalsShader.vert", "shader/normalsShader.frag");
 
 	Renderer renderer(&vertices, &indices);
-	renderer.run(glfwBuilder.getWindow(), shader.ID, lineShader.ID,
+	renderer.run(glfwBuilder.getWindow(), shader.ID, blackLineShader.ID, normalsShader.ID,
 		glfwBuilder.getVAO(), glfwBuilder.getVBO(), glfwBuilder.getEBO(), 
 		glfwBuilder.getLineVAO(), glfwBuilder.getLineVBO(), lineVertices.size(), &camera);
 

@@ -21,6 +21,7 @@ public:
 
     void run(GLFWwindow* window, 
         GLuint shaderProgram, 
+        GLuint blackShaderProgram,
         GLuint lineShaderProgram, 
         GLuint VAO, 
         GLuint VBO, 
@@ -39,6 +40,7 @@ private:
 
 inline void Renderer::run(GLFWwindow* window, 
     GLuint shaderProgram, 
+    GLuint blackShaderProgram, 
     GLuint lineShaderProgram, 
     GLuint VAO, 
     GLuint VBO, 
@@ -68,11 +70,15 @@ inline void Renderer::run(GLFWwindow* window,
 
         // render
         // ------
+        
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // draw
+        // START MESH
         glUseProgram(shaderProgram);
+
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonOffset(1.0f, 1.0f);
 
         // set uniforms
         glUniformMatrix4fv(
@@ -98,7 +104,43 @@ inline void Renderer::run(GLFWwindow* window,
         glBindVertexArray(VAO);
         //glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDisable(GL_POLYGON_OFFSET_FILL);
+        // END MESH
 
+        // START BLACK LINES
+        glUseProgram(blackShaderProgram);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        glUniformMatrix4fv(
+            glGetUniformLocation(blackShaderProgram, "model"),
+            1,
+            GL_FALSE,
+            glm::value_ptr(model)
+        );
+
+        glUniformMatrix4fv(
+            glGetUniformLocation(blackShaderProgram, "view"),
+            1,
+            GL_FALSE,
+            glm::value_ptr(view)
+        );
+
+        glUniformMatrix4fv(
+            glGetUniformLocation(blackShaderProgram, "projection"),
+            1,
+            GL_FALSE,
+            glm::value_ptr(projection)
+        );
+        glBindVertexArray(VAO);
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+        // 3. Zurücksetzen
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        // END BLACK LINES
+
+        // BEGIN NORMALS
         glUseProgram(lineShaderProgram);
         // set uniforms
         glUniformMatrix4fv(
@@ -124,6 +166,7 @@ inline void Renderer::run(GLFWwindow* window,
         glBindVertexArray(lineVAO);
         //glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawArrays(GL_LINES, 0, lineVerticesSize);
+        // END NORMALS
 
         // glBindVertexArray(0); // no need to unbind it every time 
 
