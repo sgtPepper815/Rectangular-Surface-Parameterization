@@ -20,28 +20,15 @@ std::vector<Vec3> Parameterization::calculateNormalVectorPerTriangle(const std::
 		// normal
 		Vec3 e1 = vertices[i1] - vertices[i0];
 		Vec3 e2 = vertices[i2] - vertices[i0];
-
 		Vec3 normalOfTriangle = (e1.cross(e2));
 		normalOfTriangle = normalOfTriangle.normalized();
 
 		// center of triangle
 		Vec3 A = (vertices[i0] + vertices[i1] + vertices[i2]) / 3;
-
 		Vec3 B = A + (0.2 * normalOfTriangle);
 
 		lineVertices.push_back(A);
-		lineVertices.push_back(B);
-
-		std::cout << normalOfTriangle << std::endl;
-
-		
-	}
-
-
-
-	for (int i = 0; i < lineVertices.size(); i++)
-	{
-		std::cout << lineVertices[i] << std::endl;
+		lineVertices.push_back(B);		
 	}
 
 	return lineVertices;

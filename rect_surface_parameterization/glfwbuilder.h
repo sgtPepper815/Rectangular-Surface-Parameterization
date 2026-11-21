@@ -12,8 +12,11 @@
 class GLFWBuilder
 {
 public:
-	GLFWBuilder();
-	~GLFWBuilder() = default;
+    GLFWBuilder();
+    ~GLFWBuilder() = default;
+
+	GLFWBuilder& operator=(const GLFWBuilder&) = delete;
+	GLFWBuilder& operator=(GLFWBuilder&&) = delete;
 
     void createGLFWWindow();
     void initGlad();
