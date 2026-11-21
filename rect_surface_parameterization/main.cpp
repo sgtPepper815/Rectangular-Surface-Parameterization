@@ -24,6 +24,8 @@ int main()
 	Parameterization parameterization;
 	std::vector<Vec3> lineVertices = parameterization.calculateNormalVectorPerTriangle(vertices, indices);
 
+	std::cout << "Line vertices: " << lineVertices.size() << std::endl;
+
 	glfwBuilder.setupLineBuffers(lineVertices);
 
 	Shader shader("shader/shader.vert", "shader/shader.frag");
@@ -33,8 +35,6 @@ int main()
 	Renderer renderer(&vertices, &indices);
 	renderer.run(glfwBuilder.getWindow(), shader.ID, blackLineShader.ID, normalsShader.ID,
 		glfwBuilder.getVAO(), glfwBuilder.getVBO(), glfwBuilder.getEBO(), 
-		glfwBuilder.getLineVAO(), glfwBuilder.getLineVBO(), lineVertices.size(), &camera);
-
-
+		glfwBuilder.getLineVAO(), glfwBuilder.getLineVBO(), static_cast<GLsizei>(lineVertices.size()), &camera);
 
 }

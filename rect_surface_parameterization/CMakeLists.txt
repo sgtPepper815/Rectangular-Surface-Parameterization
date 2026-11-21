@@ -5,6 +5,20 @@
 # Fügen Sie der ausführbaren Datei dieses Projekts eine Quelle hinzu.
 add_executable (rect_surface_parameterization "main.cpp" "glfwbuilder.h" "settings.h" "shader.h" "model.h" "renderer.h" "parameterization.h" "vec.h" "parameterization.cpp" "camera.h" "include.h" "camera.cpp")
 
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        /W4
+    )
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        -Wall
+        -Wextra
+        -Wconversion
+        -Wsign-conversion
+    )
+endif()
+
+
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET rect_surface_parameterization PROPERTY CXX_STANDARD 20)
 endif()

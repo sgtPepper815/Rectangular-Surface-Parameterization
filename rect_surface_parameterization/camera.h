@@ -11,8 +11,8 @@ class Camera
 public:
 	Camera(glm::vec3 target, float yaw, float pitch, float distance);
 	~Camera() = default;
-	glm::vec3 getCameraPosition();
-	glm::mat4 getViewMatrix(glm::vec3 cameraPosition); 
+	glm::vec3 getCameraPosition() const;
+	glm::mat4 getViewMatrix(glm::vec3 &cameraPosition) const; 
 	
 	void onMouseButton(int button, int action, double x, double y);
 	void onMouseMove(double x, double y); 

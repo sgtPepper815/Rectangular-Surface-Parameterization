@@ -16,8 +16,8 @@ public:
 	Renderer& operator=(const Renderer&) = delete;
 	Renderer& operator=(Renderer&&) = delete;
 
-	Renderer(const std::vector<Vec3>* vertices, const std::vector<unsigned int>* indices)
-		: mVertices(*vertices), mIndices(*indices) {};
+	Renderer(const std::vector<Vec3>* _vertices, const std::vector<unsigned int>* _indices)
+		: mVertices(*_vertices), mIndices(*_indices) {};
 
     void run(GLFWwindow* window, 
         GLuint shaderProgram, 
@@ -28,7 +28,7 @@ public:
         GLuint EBO, 
         GLuint lineVAO, 
         GLuint lineVBO, 
-        int lineVerticesSize,
+        GLsizei lineVerticesSize,
         Camera* camera);
 
 
@@ -47,7 +47,7 @@ inline void Renderer::run(GLFWwindow* window,
     GLuint EBO, 
     GLuint lineVAO, 
     GLuint lineVBO, 
-    int lineVerticesSize, 
+    GLsizei lineVerticesSize, 
     Camera* camera)
 {
     // render loop
@@ -58,7 +58,8 @@ inline void Renderer::run(GLFWwindow* window,
         glm::mat4 model = glm::mat4(1.0f);
 
         // view matrix
-        glm::mat4 view = camera->getViewMatrix(camera->getCameraPosition());
+        glm::vec3 cameraPosition = camera->getCameraPosition();
+        glm::mat4 view = camera->getViewMatrix(cameraPosition);
 
         // projection matrix
         glm::mat4 projection = glm::perspective(
@@ -140,8 +141,10 @@ inline void Renderer::run(GLFWwindow* window,
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         // END BLACK LINES
 
-        // BEGIN NORMALS
+        // BEGIN NORMALS AND TANGENTIALS
         glUseProgram(lineShaderProgram);
+
+
         // set uniforms
         glUniformMatrix4fv(
             glGetUniformLocation(lineShaderProgram, "model"),
@@ -162,10 +165,34 @@ inline void Renderer::run(GLFWwindow* window,
             1,
             GL_FALSE,
             glm::value_ptr(projection)
-        );
+        );       
+
         glBindVertexArray(lineVAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawArrays(GL_LINES, 0, lineVerticesSize);
+
+        for (int i = 0; i < lineVerticesSize; i += 6)
+        {
+            // normal - blue
+            glUniform3f(
+                glGetUniformLocation(lineShaderProgram, "lineColor"),
+                0.1f, 0.1f, 1.0f
+            );
+            glDrawArrays(GL_LINES, i, 2);
+
+            // t1 - red
+            glUniform3f(
+                glGetUniformLocation(lineShaderProgram, "lineColor"),
+                1.0f, 0.1f, 0.1f
+            );
+            glDrawArrays(GL_LINES, i+2, 2);
+
+            // t2 - green
+            glUniform3f(
+                glGetUniformLocation(lineShaderProgram, "lineColor"),
+                0.0f, 1.0f, 0.1f
+            );
+            glDrawArrays(GL_LINES, i+4, 2);
+        }
+
         // END NORMALS
 
         // glBindVertexArray(0); // no need to unbind it every time 
