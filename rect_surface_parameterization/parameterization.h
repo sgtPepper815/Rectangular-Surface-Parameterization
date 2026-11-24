@@ -8,6 +8,7 @@ class Parameterization
 public:
 	
 	std::vector<Vec3> calculateNormalVectorPerTriangle(const std::vector<Vec3>& _vertices,const  std::vector<unsigned int>& _indices);
+	void findTriangleAdjacency(const std::vector<unsigned int>& _indices);
 
 };
 

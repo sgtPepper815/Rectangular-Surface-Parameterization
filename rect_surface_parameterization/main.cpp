@@ -23,13 +23,14 @@ int main()
 
 	Parameterization parameterization;
 	std::vector<Vec3> lineVertices = parameterization.calculateNormalVectorPerTriangle(vertices, indices);
+	parameterization.findTriangleAdjacency(indices);
 
 	std::cout << "Line vertices: " << lineVertices.size() << std::endl;
 
 	glfwBuilder.setupLineBuffers(lineVertices);
 
 	Shader shader("shader/shader.vert", "shader/shader.frag");
-	Shader blackLineShader("shader/blackLineShader.vert", "shader/blackLineShader.frag");
+	Shader blackLineShader("shader/blackLineShader.vert", "shader/blackLineShader.frag"); // outline shader for the lines so we see the triangles
 	Shader normalsShader("shader/normalsShader.vert", "shader/normalsShader.frag");
 
 	Renderer renderer(&vertices, &indices);
