@@ -27,7 +27,18 @@ endif()
 
 add_subdirectory(external/glad)
 add_subdirectory(external/glfw-3.5.1)
-add_subdirectory(external/glm)
+
+include(FetchContent)
+
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 1.0.1
+    GIT_SHALLOW TRUE
+)
+
+
+FetchContent_MakeAvailable(glm)
 
 target_link_libraries(rect_surface_parameterization PRIVATE glad)
 target_link_libraries(rect_surface_parameterization PRIVATE glfw)
