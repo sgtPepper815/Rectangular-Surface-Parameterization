@@ -1,3 +1,8 @@
+## Preview
+
+![ShaderDNA Preview](params.jpg)
+
+
 Mesh Processing & Surface Parameterization
 
 C++, OpenGL, Computational Geometry
