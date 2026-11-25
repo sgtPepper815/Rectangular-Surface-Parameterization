@@ -1,6 +1,6 @@
 ## Preview
 
-![ShaderDNA Preview](params.jpg)
+![ShaderDNA Preview](param.jpg)
 
 
 Mesh Processing & Surface Parameterization
